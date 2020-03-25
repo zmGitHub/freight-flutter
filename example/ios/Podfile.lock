@@ -1,0 +1,41 @@
+PODS:
+  - AMapFoundation (1.6.2)
+  - AMapLocation (2.6.4):
+    - AMapFoundation (~> 1.6.1)
+  - Flutter (1.0.0)
+  - freight (0.0.1):
+    - AMapLocation (= 2.6.4)
+    - Flutter
+    - GMObjC (= 3.0.0)
+  - GMObjC (3.0.0):
+    - GMOpenSSL
+  - GMOpenSSL (2.0.2)
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - freight (from `.symlinks/plugins/freight/ios`)
+
+SPEC REPOS:
+  trunk:
+    - AMapFoundation
+    - AMapLocation
+    - GMObjC
+    - GMOpenSSL
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  freight:
+    :path: ".symlinks/plugins/freight/ios"
+
+SPEC CHECKSUMS:
+  AMapFoundation: 672dc3a4759cb733f447c1e1b020f7ba2729f4ab
+  AMapLocation: b4162db67f813508a14ee7e05c7ee4073785221d
+  Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
+  freight: 9ef8071821110715f11fb2d0ea0920099e79c039
+  GMObjC: 4ad23614c0279f864ae11703fd64ba51b9bc0739
+  GMOpenSSL: 6caf76275b303430560190baba8dea3347b94fe1
+
+PODFILE CHECKSUM: 3dbe063e9c90a5d7c9e4e76e70a821b9e2c1d271
+
+COCOAPODS: 1.8.4
