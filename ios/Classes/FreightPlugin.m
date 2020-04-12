@@ -1,5 +1,7 @@
 #import "FreightPlugin.h"
 #import <MapManager/MapManager.h>
+#import <AMapFoundationKit/AMapFoundationKit.h>
+#import <AMapLocationKit/AMapLocationKit.h>
 
 @implementation FreightPlugin {
     MapService *service;
@@ -60,6 +62,10 @@
                 result(dict);
             }
         }];
+    } else if ([@"initAmap" isEqualToString:call.method]) {
+        NSLog(@"[Freight][iOS].[initAmap]");
+        [AMapServices sharedServices].apiKey = call.arguments;
+        result(@YES);
     } else {
         result(FlutterMethodNotImplemented);
     }
