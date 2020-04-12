@@ -64,7 +64,7 @@
         }];
     } else if ([@"initAmap" isEqualToString:call.method]) {
         NSLog(@"[Freight][iOS].[initAmap]");
-        [AMapServices sharedServices].apiKey = call.arguments;
+        [AMapServices sharedServices].apiKey = call.arguments[@"key"];
         result(@YES);
     } else {
         result(FlutterMethodNotImplemented);

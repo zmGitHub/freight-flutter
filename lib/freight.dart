@@ -45,6 +45,6 @@ class Freight {
   /// 备注: 仅在iOS平台下调用
   /// @param 高德地图服务key
   static Future<bool> initAmap(String key) async {
-    return await _channel.invokeMethod("initAmap", key);
+    return await _channel.invokeMethod("initAmap", {"key": key});
   }
 }
