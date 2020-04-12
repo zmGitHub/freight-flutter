@@ -82,6 +82,18 @@
         self.locationManager.reGeocodeTimeout = 10;
 
         result(@YES);
+    } else if ([@"getLocation" isEqualToString:call.method]) {
+        NSLog(@"[Freight][iOS].[getLocation]");
+        [self.locationManager requestLocationWithReGeocode:NO completionBlock:^(CLLocation *location, AMapLocationReGeocode *regeocode, NSError *error) {
+            if (error) {
+                NSLog(@"获取定位信息失败: %zd, %@", error.code, error.localizedDescription);
+            } else {
+                result(@{
+                        @"latitude": @(location.coordinate.latitude),
+                        @"longitude": @(location.coordinate.longitude),
+                });
+            }
+        }];
     } else {
         result(FlutterMethodNotImplemented);
     }

@@ -47,4 +47,9 @@ class Freight {
   static Future<bool> initAmap(String key) async {
     return await _channel.invokeMethod("initAmap", {"key": key});
   }
+
+  /// 获取定位信息
+  static Future<Map<String, dynamic>> getLocation() async {
+    return _channel.invokeMethod("getLocation");
+  }
 }
