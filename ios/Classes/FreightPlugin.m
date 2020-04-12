@@ -3,6 +3,13 @@
 #import <AMapFoundationKit/AMapFoundationKit.h>
 #import <AMapLocationKit/AMapLocationKit.h>
 
+
+@interface FreightPlugin ()
+
+@property(nonatomic, retain) AMapLocationManager *locationManager;
+
+@end
+
 @implementation FreightPlugin {
     MapService *service;
 }
@@ -65,6 +72,15 @@
     } else if ([@"initAmap" isEqualToString:call.method]) {
         NSLog(@"[Freight][iOS].[initAmap]");
         [AMapServices sharedServices].apiKey = call.arguments[@"key"];
+
+        self.locationManager = [[AMapLocationManager alloc] init];
+        // 带逆地理信息的一次定位（返回坐标和地址信息）
+        [self.locationManager setDesiredAccuracy:kCLLocationAccuracyBest];
+        // 定位超时时间，最低2s，此处设置为10s
+        self.locationManager.locationTimeout = 10;
+        // 逆地理请求超时时间，最低2s，此处设置为10s
+        self.locationManager.reGeocodeTimeout = 10;
+
         result(@YES);
     } else {
         result(FlutterMethodNotImplemented);
