@@ -49,7 +49,8 @@ class Freight {
   }
 
   /// 获取定位信息
-  static Future<Map<String, dynamic>> getLocation() async {
-    return _channel.invokeMethod("getLocation");
+  static Future<Map<String, num>> getLocation() async {
+    Map<dynamic, dynamic> result = await _channel.invokeMethod("getLocation");
+    return new Map.from(result);
   }
 }
