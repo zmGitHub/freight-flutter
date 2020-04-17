@@ -97,6 +97,30 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
+  Future<void> initAmap() async {
+    try {
+      bool result = await Freight.initAmap("10c4dce1b34e7ec55d368d2a167a0028");
+
+      setState(() {
+        _platformVersion = result ? "initAmap 成功" : "initAmap 失败";
+      });
+    } catch (e) {
+      debugPrint("[DEMO] initAmap失败: " + e.toString());
+    }
+  }
+
+  Future<void> getLocation() async {
+    try {
+      Map<String, num> result = await Freight.getLocation();
+
+      setState(() {
+        _platformVersion = result.toString();
+      });
+    } catch (e) {
+      debugPrint("[DEMO] getLocation失败: " + e.toString());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -130,6 +154,22 @@ class _MyAppState extends State<MyApp> {
                   ),
                 ],
               ),
+            ),
+            Row(
+              children: <Widget>[
+                RaisedButton(
+                  child: Text("初始化高德地图服务"),
+                  onPressed: () async {
+                    await initAmap();
+                  },
+                ),
+                RaisedButton(
+                  child: Text("获取定位"),
+                  onPressed: () async {
+                    await getLocation();
+                  },
+                ),
+              ],
             ),
             Text("Running on: $_platformVersion\n"),
           ],
