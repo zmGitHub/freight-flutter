@@ -25,6 +25,14 @@ apply plugin: 'com.android.application'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
+    signingConfigs {
+        debug {
+            storeFile file('/Users/xpress/Documents/keystores/freight.jks')
+            keyPassword '1234qwer'
+            storePassword '1234qwer'
+            keyAlias = 'freight'
+        }
+    }
     compileSdkVersion 28
 
     lintOptions {
@@ -39,6 +47,10 @@ android {
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        manifestPlaceholders = [
+                AMAP_KEY: "53e817afb7e107cbe95dc7cc28f70354", /// 高德地图key
+        ]
     }
 
     buildTypes {

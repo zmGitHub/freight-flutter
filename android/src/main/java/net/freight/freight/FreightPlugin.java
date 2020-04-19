@@ -88,6 +88,7 @@ public class FreightPlugin implements FlutterPlugin, MethodCallHandler {
                 final AMapLocationListener listener = new AMapLocationListener() {
                     @Override
                     public void onLocationChanged(AMapLocation aMapLocation) {
+                        Log.d("freight.Android.getLocation", "定位结果..." + aMapLocation);
                         Map<String, Double> map = new HashMap<>();
                         map.put("latitude", aMapLocation.getLatitude());
                         map.put("longitude", aMapLocation.getLongitude());
