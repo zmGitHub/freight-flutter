@@ -1,7 +1,10 @@
 package net.freight.freight;
 
+import android.content.Context;
+
 import androidx.annotation.NonNull;
 
+import io.flutter.Log;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
@@ -9,14 +12,25 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
 
+import com.amap.api.location.AMapLocationClient;
+import com.amap.api.location.AMapLocationClientOption;
+
 /**
  * FreightPlugin
  */
 public class FreightPlugin implements FlutterPlugin, MethodCallHandler {
+
+    private Context context;
+    private AMapLocationClient locationClient;
+
+    public FreightPlugin(Context context) {
+        this.context = context;
+    }
+
     @Override
     public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
         final MethodChannel channel = new MethodChannel(flutterPluginBinding.getFlutterEngine().getDartExecutor(), "freight");
-        channel.setMethodCallHandler(new FreightPlugin());
+        channel.setMethodCallHandler(new FreightPlugin(flutterPluginBinding.getApplicationContext()));
     }
 
     // This static function is optional and equivalent to onAttachedToEngine. It supports the old
@@ -30,13 +44,38 @@ public class FreightPlugin implements FlutterPlugin, MethodCallHandler {
     // in the same class.
     public static void registerWith(Registrar registrar) {
         final MethodChannel channel = new MethodChannel(registrar.messenger(), "freight");
-        channel.setMethodCallHandler(new FreightPlugin());
+        channel.setMethodCallHandler(new FreightPlugin(registrar.context()));
     }
 
     @Override
     public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
         if (call.method.equals("getPlatformVersion")) {
             result.success("Android " + android.os.Build.VERSION.RELEASE);
+        } else if (call.method.equals("initAmap")) {
+            Log.d("freight.Android", "initAmap");
+
+            synchronized (this) {
+                if (locationClient == null) {
+                    // 初始化client
+                    locationClient = new AMapLocationClient(this.context);
+
+                    // 新建定位参数
+                    AMapLocationClientOption option = new AMapLocationClientOption();
+                    // 定位场景 签到
+                    option.setLocationPurpose(AMapLocationClientOption.AMapLocationPurpose.SignIn);
+                    // 定位模式 高精度
+                    option.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
+                    // 单次定位
+                    option.setOnceLocation(true);
+                    // 地址描述 否
+                    option.setNeedAddress(false);
+
+                    // 设置定位参数
+                    locationClient.setLocationOption(option);
+                }
+            }
+
+            result.success(true);
         } else {
             result.notImplemented();
         }
