@@ -12,8 +12,13 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
 
+import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
+import com.amap.api.location.AMapLocationListener;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * FreightPlugin
@@ -48,7 +53,7 @@ public class FreightPlugin implements FlutterPlugin, MethodCallHandler {
     }
 
     @Override
-    public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
+    public void onMethodCall(@NonNull MethodCall call, @NonNull final Result result) {
         if (call.method.equals("getPlatformVersion")) {
             result.success("Android " + android.os.Build.VERSION.RELEASE);
         } else if (call.method.equals("initAmap")) {
@@ -76,6 +81,26 @@ public class FreightPlugin implements FlutterPlugin, MethodCallHandler {
             }
 
             result.success(true);
+        } else if (call.method.equals("getLocation")) {
+            Log.d("freight.Android", "getLocation");
+
+            synchronized (this) {
+                final AMapLocationListener listener = new AMapLocationListener() {
+                    @Override
+                    public void onLocationChanged(AMapLocation aMapLocation) {
+                        Map<String, Double> map = new HashMap<>();
+                        map.put("latitude", aMapLocation.getLatitude());
+                        map.put("longitude", aMapLocation.getLongitude());
+
+                        result.success(map);
+
+                        locationClient.stopLocation();
+                    }
+                };
+
+                locationClient.setLocationListener(listener);
+                locationClient.startLocation();
+            }
         } else {
             result.notImplemented();
         }
