@@ -28,14 +28,12 @@ public class FreightPlugin implements FlutterPlugin, MethodCallHandler {
     private Context context;
     private AMapLocationClient locationClient;
 
-    public FreightPlugin(Context context) {
-        this.context = context;
-    }
-
     @Override
     public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
         final MethodChannel channel = new MethodChannel(flutterPluginBinding.getFlutterEngine().getDartExecutor(), "freight");
-        channel.setMethodCallHandler(new FreightPlugin(flutterPluginBinding.getApplicationContext()));
+        final FreightPlugin instance = new FreightPlugin();
+        context = flutterPluginBinding.getApplicationContext();
+        channel.setMethodCallHandler(instance);
     }
 
     // This static function is optional and equivalent to onAttachedToEngine. It supports the old
@@ -49,7 +47,9 @@ public class FreightPlugin implements FlutterPlugin, MethodCallHandler {
     // in the same class.
     public static void registerWith(Registrar registrar) {
         final MethodChannel channel = new MethodChannel(registrar.messenger(), "freight");
-        channel.setMethodCallHandler(new FreightPlugin(registrar.context()));
+        final FreightPlugin instance = new FreightPlugin();
+        instance.context = registrar.context();
+        channel.setMethodCallHandler(instance);
     }
 
     @Override
