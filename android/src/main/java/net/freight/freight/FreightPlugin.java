@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 
 import io.flutter.Log;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
+import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
@@ -26,14 +27,18 @@ import java.util.Map;
 public class FreightPlugin implements FlutterPlugin, MethodCallHandler {
 
     private Context context;
+    private MethodChannel channel;
     private AMapLocationClient locationClient;
 
     @Override
     public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
-        final MethodChannel channel = new MethodChannel(flutterPluginBinding.getFlutterEngine().getDartExecutor(), "freight");
-        final FreightPlugin instance = new FreightPlugin();
-        context = flutterPluginBinding.getApplicationContext();
-        channel.setMethodCallHandler(instance);
+        onAttachedToEngine(flutterPluginBinding.getApplicationContext(), flutterPluginBinding.getBinaryMessenger());
+    }
+
+    private void onAttachedToEngine(Context context, BinaryMessenger messenger) {
+        this.context = context;
+        channel = new MethodChannel(messenger, "freight");
+        channel.setMethodCallHandler(this);
     }
 
     // This static function is optional and equivalent to onAttachedToEngine. It supports the old
@@ -46,10 +51,8 @@ public class FreightPlugin implements FlutterPlugin, MethodCallHandler {
     // depending on the user's project. onAttachedToEngine or registerWith must both be defined
     // in the same class.
     public static void registerWith(Registrar registrar) {
-        final MethodChannel channel = new MethodChannel(registrar.messenger(), "freight");
         final FreightPlugin instance = new FreightPlugin();
-        instance.context = registrar.context();
-        channel.setMethodCallHandler(instance);
+        instance.onAttachedToEngine(registrar.context(), registrar.messenger());
     }
 
     @Override
@@ -109,5 +112,7 @@ public class FreightPlugin implements FlutterPlugin, MethodCallHandler {
 
     @Override
     public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
+        context = null;
+        channel = null;
     }
 }
