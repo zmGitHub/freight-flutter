@@ -25,14 +25,6 @@ apply plugin: 'com.android.application'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
-    signingConfigs {
-        debug {
-            storeFile file('/Users/xpress/Documents/keystores/freight.jks')
-            keyPassword '1234qwer'
-            storePassword '1234qwer'
-            keyAlias = 'freight'
-        }
-    }
     compileSdkVersion 28
 
     lintOptions {
