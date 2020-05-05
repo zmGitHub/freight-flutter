@@ -1,22 +1,24 @@
 package com.mambainout.freight;
 
-import android.content.Context;
+import android.app.Activity;
 
 import androidx.annotation.NonNull;
 
 import io.flutter.Log;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
-import io.flutter.plugin.common.BinaryMessenger;
+import io.flutter.embedding.engine.plugins.activity.ActivityAware;
+import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
-import io.flutter.plugin.common.PluginRegistry.Registrar;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
+import com.hdgq.locationlib.LocationOpenApi;
+import com.hdgq.locationlib.listener.OnResultListener;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,35 +26,15 @@ import java.util.Map;
 /**
  * FreightPlugin
  */
-public class FreightPlugin implements FlutterPlugin, MethodCallHandler {
+public class FreightPlugin implements FlutterPlugin, MethodCallHandler, ActivityAware {
 
-    private Context context;
-    private MethodChannel channel;
     private AMapLocationClient locationClient;
+    private Activity activity;
 
     @Override
     public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
-        onAttachedToEngine(flutterPluginBinding.getApplicationContext(), flutterPluginBinding.getBinaryMessenger());
-    }
-
-    private void onAttachedToEngine(Context context, BinaryMessenger messenger) {
-        this.context = context;
-        channel = new MethodChannel(messenger, "freight");
+        final MethodChannel channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "freight");
         channel.setMethodCallHandler(this);
-    }
-
-    // This static function is optional and equivalent to onAttachedToEngine. It supports the old
-    // pre-Flutter-1.12 Android projects. You are encouraged to continue supporting
-    // plugin registration via this function while apps migrate to use the new Android APIs
-    // post-flutter-1.12 via https://flutter.dev/go/android-project-migration.
-    //
-    // It is encouraged to share logic between onAttachedToEngine and registerWith to keep
-    // them functionally equivalent. Only one of onAttachedToEngine or registerWith will be called
-    // depending on the user's project. onAttachedToEngine or registerWith must both be defined
-    // in the same class.
-    public static void registerWith(Registrar registrar) {
-        final FreightPlugin instance = new FreightPlugin();
-        instance.onAttachedToEngine(registrar.context(), registrar.messenger());
     }
 
     @Override
@@ -65,7 +47,7 @@ public class FreightPlugin implements FlutterPlugin, MethodCallHandler {
             synchronized (this) {
                 if (locationClient == null) {
                     // 初始化client
-                    locationClient = new AMapLocationClient(this.context);
+                    locationClient = new AMapLocationClient(this.activity);
 
                     // 新建定位参数
                     AMapLocationClientOption option = new AMapLocationClientOption();
@@ -112,7 +94,24 @@ public class FreightPlugin implements FlutterPlugin, MethodCallHandler {
 
     @Override
     public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
-        context = null;
-        channel = null;
+    }
+
+    @Override
+    public void onAttachedToActivity(ActivityPluginBinding binding) {
+        if (activity == null) {
+            activity = binding.getActivity();
+        }
+    }
+
+    @Override
+    public void onDetachedFromActivityForConfigChanges() {
+    }
+
+    @Override
+    public void onReattachedToActivityForConfigChanges(ActivityPluginBinding binding) {
+    }
+
+    @Override
+    public void onDetachedFromActivity() {
     }
 }
