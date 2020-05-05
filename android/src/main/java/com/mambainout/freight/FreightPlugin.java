@@ -97,7 +97,7 @@ public class FreightPlugin implements FlutterPlugin, MethodCallHandler, Activity
     }
 
     @Override
-    public void onAttachedToActivity(ActivityPluginBinding binding) {
+    public void onAttachedToActivity(@NonNull ActivityPluginBinding binding) {
         if (activity == null) {
             activity = binding.getActivity();
         }
@@ -108,7 +108,7 @@ public class FreightPlugin implements FlutterPlugin, MethodCallHandler, Activity
     }
 
     @Override
-    public void onReattachedToActivityForConfigChanges(ActivityPluginBinding binding) {
+    public void onReattachedToActivityForConfigChanges(@NonNull ActivityPluginBinding binding) {
     }
 
     @Override
