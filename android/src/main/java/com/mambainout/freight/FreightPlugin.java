@@ -41,6 +41,28 @@ public class FreightPlugin implements FlutterPlugin, MethodCallHandler, Activity
     public void onMethodCall(@NonNull MethodCall call, @NonNull final Result result) {
         if (call.method.equals("getPlatformVersion")) {
             result.success("Android " + android.os.Build.VERSION.RELEASE);
+        } else if (call.method.equals("init")) {
+            String appId = call.argument("appId");
+            String appSecurity = call.argument("appSecurity");
+            String eeCode = call.argument("eeCode");
+            String env = call.argument("env");
+            LocationOpenApi.init(activity, appId, appSecurity, eeCode, env, new OnResultListener() {
+                @Override
+                public void onSuccess() {
+                    HashMap json = new HashMap<String, String>();
+                    json.put("code", "0");
+                    json.put("message", "成功");
+                    result.success(json);
+                }
+
+                @Override
+                public void onFailure(String code, String message) {
+                    result.error(code, message, null);
+                }
+            });
+        } else if (call.method.equals("start")) {
+        } else if (call.method.equals("stop")) {
+
         } else if (call.method.equals("initAmap")) {
             Log.d("freight.Android", "initAmap");
 
