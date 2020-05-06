@@ -18,9 +18,12 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.hdgq.locationlib.LocationOpenApi;
+import com.hdgq.locationlib.entity.ShippingNoteInfo;
 import com.hdgq.locationlib.listener.OnResultListener;
 
+import java.lang.reflect.Array;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -61,8 +64,60 @@ public class FreightPlugin implements FlutterPlugin, MethodCallHandler, Activity
                 }
             });
         } else if (call.method.equals("start")) {
-        } else if (call.method.equals("stop")) {
+            List<Map<String, String>> ships = call.argument("ships");
+            ShippingNoteInfo[] shipList = new ShippingNoteInfo[ships.size()];
+            for (int i = 0; i < shipList.length; i++) {
+                Log.d("ship", ships.get(i).toString());
+                ShippingNoteInfo ship = new ShippingNoteInfo();
+                ship.setShippingNoteNumber(ships.get(i).get("shippingNoteNumber"));
+                ship.setSerialNumber(ships.get(i).get("serialNumber"));
+                ship.setStartCountrySubdivisionCode(ships.get(i).get("startCountrySubdivisionCode"));
+                ship.setEndCountrySubdivisionCode(ships.get(i).get("endCountrySubdivisionCode"));
+                shipList[i] = ship;
+            }
 
+            LocationOpenApi.start(this.activity, shipList, new OnResultListener() {
+                @Override
+                public void onSuccess() {
+                    HashMap json = new HashMap<String, String>();
+                    json.put("code", "0");
+                    json.put("message", "start成功");
+                    result.success(json);
+                }
+
+                @Override
+                public void onFailure(String code, String message) {
+                    result.error(code, message, null);
+
+                }
+            });
+        } else if (call.method.equals("stop")) {
+            List<Map<String, String>> ships = call.argument("ships");
+            ShippingNoteInfo[] shipList = new ShippingNoteInfo[ships.size()];
+            for (int i = 0; i < shipList.length; i++) {
+                Log.d("ship", ships.get(i).toString());
+                ShippingNoteInfo ship = new ShippingNoteInfo();
+                ship.setShippingNoteNumber(ships.get(i).get("shippingNoteNumber"));
+                ship.setSerialNumber(ships.get(i).get("serialNumber"));
+                ship.setStartCountrySubdivisionCode(ships.get(i).get("startCountrySubdivisionCode"));
+                ship.setEndCountrySubdivisionCode(ships.get(i).get("endCountrySubdivisionCode"));
+                shipList[i] = ship;
+            }
+
+            LocationOpenApi.stop(this.activity, shipList, new OnResultListener() {
+                @Override
+                public void onSuccess() {
+                    HashMap json = new HashMap<String, String>();
+                    json.put("code", "0");
+                    json.put("message", "stop成功");
+                    result.success(json);
+                }
+
+                @Override
+                public void onFailure(String code, String message) {
+                    result.error(code, message, null);
+                }
+            });
         } else if (call.method.equals("initAmap")) {
             Log.d("freight.Android", "initAmap");
 
