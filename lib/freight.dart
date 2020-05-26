@@ -11,7 +11,7 @@ class Freight {
   }
 
   /// 初始化服务
-  static Future<Map<String, String>> init(
+  static Future<Map<String, dynamic>> init(
       String appId, String appSecurity, String eeCode, String env) async {
     final Map<dynamic, dynamic> result = await _channel.invokeMethod("init", {
       "appId": appId,
@@ -20,25 +20,25 @@ class Freight {
       "env": env
     });
 
-    return new Map<String, String>.from(result);
+    return new Map<String, dynamic>.from(result);
   }
 
   /// 启用定位
-  static Future<Map<String, String>> start(
-      List<Map<String, String>> ships) async {
+  static Future<Map<String, dynamic>> start(
+      List<Map<String, dynamic>> ships) async {
     final Map<dynamic, dynamic> result =
         await _channel.invokeMethod("start", {"ships": ships});
 
-    return new Map<String, String>.from(result);
+    return new Map<String, dynamic>.from(result);
   }
 
   /// 结束定位
-  static Future<Map<String, String>> stop(
-      List<Map<String, String>> ships) async {
+  static Future<Map<String, dynamic>> stop(
+      List<Map<String, dynamic>> ships) async {
     final Map<dynamic, dynamic> result =
         await _channel.invokeMethod("stop", {"ships": ships});
 
-    return new Map<String, String>.from(result);
+    return new Map<String, dynamic>.from(result);
   }
 
   /// 初始化高德地图服务
@@ -49,7 +49,7 @@ class Freight {
   }
 
   /// 获取定位信息
-  static Future<Map<String, num>> getLocation() async {
+  static Future<Map<String, dynamic>> getLocation() async {
     Map<dynamic, dynamic> result = await _channel.invokeMethod("getLocation");
     return new Map.from(result);
   }
